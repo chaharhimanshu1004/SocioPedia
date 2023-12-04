@@ -8,13 +8,15 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import userRoutes from './routes/users.js';
-import authRoutes from './routes/auth.js';
-import postRoutes from './routes/posts.js'
+// import userRoutes from './routes/users.js';
+// import authRoutes from './routes/auth.js';
+// import postRoutes from './routes/posts.js'
 import { register } from './controllers/auth.js'
 import {createPost} from './controllers/posts.js';
-import User from './models/User.js'
 import { verifyToken } from './middleware/auth.js'
+import User from './models/User.js'
+import Post from './models/Post.js'
+import { users,posts } from './data/index.js'
 
 
 const __filename = fileURLToPath(import.meta.url)
@@ -48,9 +50,9 @@ const upload = multer({storage}); // this variable going to be used anytime we a
 app.post("/auth/register",upload.single('picture'),register);
 app.post("/posts",verifyToken,upload.single('picture'),createPost);
 
-app.use("/auth",authRoutes);
-app.use("/users",userRoutes);
-app.use("/posts",postRoutes);
+// app.use("/auth",authRoutes);
+// app.use("/users",userRoutes);
+// app.use("/posts",postRoutes);
 
 const PORT = process.env.PORT || 6001
 
@@ -58,7 +60,12 @@ mongoose.connect(process.env.MONGO_URL,{
     useNewUrlParser:true,
     useUnifiedTopology:true,
 }).then(()=>{
-    app.listen(PORT,()=>console.log(`Server PORT : ${PORT}`))
+    app.listen(PORT,()=>console.log(`Server PORT : ${PORT}`));
+    // add data one time -- therefore ek bar add krke comment out
+    //   save krke then comment out all of them
+    // User.insertMany(users);
+    // Post.insertMany(posts);
+
 
 }).catch((err)=>console.log(`${err} Server did not connect`));
 
